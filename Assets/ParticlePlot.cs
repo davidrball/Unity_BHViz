@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+
 public class ParticlePlot : MonoBehaviour
 {
     public string inputfile;
@@ -13,15 +14,17 @@ public class ParticlePlot : MonoBehaviour
     public int columnX = 0;
     public int columnY = 1;
     public int columnZ = 2;
+    public int columnT = 3;
  
     // Full column names
     public string xName;
     public string yName;
     public string zName;
+    public string tName;
 
 
     //can change scale of plot
-    public float plotScale = 10;
+    public float plotScale = 100;
 
     public GameObject PointPrefab;
 
@@ -46,17 +49,19 @@ public class ParticlePlot : MonoBehaviour
     xName = columnList[columnX];
     yName = columnList[columnY];
     zName = columnList[columnZ];
+    tName = columnList[columnT];
 
     // Get maxes of each axis
     float xMax = FindMaxValue(xName);
     float yMax = FindMaxValue(yName);
     float zMax = FindMaxValue(zName);
- 
+    float tMax = FindMaxValue(tName);
+
     // Get minimums of each axis
     float xMin = FindMinValue(xName);
     float yMin = FindMinValue(yName);
     float zMin = FindMinValue(zName);
-
+    float tMin = FindMinValue(tName);
 
     //Loop through Pointlist
     for (var i = 0; i < pointList.Count; i++)
@@ -77,9 +82,14 @@ public class ParticlePlot : MonoBehaviour
     float z = 
     (System.Convert.ToSingle(pointList[i][zName]) - zMin) / (zMax - zMin);
 
-    
+    //how do we want to scale t?
+    //float t = Math.Sqrt(pointList[i][tName]);
+
+    float t = 
+    (System.Convert.ToSingle(pointList[i][tName]) - tMin) / (tMax - tMin);
 
 
+    float t2 = Convert.ToSingle(Math.Sqrt(Convert.ToDouble(t)));
     //instantiate the prefab with coordinates defined above
     //Instantiate(PointPrefab, new Vector3(x, y, z), Quaternion.identity);
  
@@ -102,7 +112,7 @@ public class ParticlePlot : MonoBehaviour
 
     // Gets material color and sets it to a new RGBA color we define
     dataPoint.GetComponent<Renderer>().material.color = 
-    new Color(x,y,z, 1.0f);
+    new Color(t,0,1-t, t);
 
 
     }
